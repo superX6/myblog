@@ -1,15 +1,17 @@
 <template>
   <div>
     <div class="login-wrap" v-show="showLogin">
-      <h3>登录</h3>
+      <img src="../../common/img/avatar.gif" class="avatar">
+      <h3>登 录</h3>
       <p v-show="showTishi">{{tishi}}</p>
       <input type="text" placeholder="请输入用户名" v-model="account">
       <input type="password" placeholder="请输入密码" v-model="password">
       <button @click="login">登55录</button>
-      <span @click="ToRegister">没有账号？马5上注册</span>
+      <span @click="ToRegister">没有账号？马上注册</span>
     </div>
 
     <div class="register-wrap" v-show="showRegister">
+      <img src="../../common/img/avatar.gif" class="avatar">
       <h3>注册</h3>
       <p v-show="showTishi">{{tishi}}</p>
       <input type="text" placeholder="请输入用户名" v-model="newAccount">
@@ -25,6 +27,10 @@
 
   .login-wrap, .register-wrap
     text-align: center
+    img
+      width: 100px
+      height: 100px
+      border-radius: 500px
     input
       display: block
       width: 250px
@@ -57,6 +63,7 @@
 
 <script>
   import {createUser, checkAccount} from 'api/user'
+  import {setCookies, getCookies} from '../../common/js/cookie'
 
   export default{
     data () {
@@ -69,6 +76,11 @@
         password: '',
         newAccount: '',
         newPassword: ''
+      }
+    },
+    mounted () {
+      if (getCookies('username')) {
+        this.$router.push('/home')
       }
     },
     methods: {
@@ -104,6 +116,9 @@
           if (result === 1) {
             this.showTishi = true
             this.tishi = '登录成功'
+            setTimeout(function () {
+              this.$router.push('/home')
+            }.bind(this), 1000)
           } else {
             console.log('error')
             this.account = ''
